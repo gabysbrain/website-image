@@ -10,8 +10,10 @@ jobs:
   build:
     executor: nixos
     steps:
+      - restore_cache:
+          keys:
+            - nix-cache
       - checkout
-      - setup_remote_docker
       - run:
           name: Install dependencies
           command: |
@@ -22,6 +24,11 @@ jobs:
           name: Build application Docker image
           command: |
             nix-build && cp -L result image.tar
+
+      - save_cache:
+          key: nix-cache
+          paths:
+            - /nix/store
       - persist_to_workspace:
           root: .
           paths:
