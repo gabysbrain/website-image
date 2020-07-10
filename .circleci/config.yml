@@ -3,12 +3,13 @@ executors:
   docker-publisher:
     docker:
       - image: circleci/buildpack-deps:stretch
-    nix:
+  nixos:
+    docker:
       - image: nixos/nix:latest
 jobs:
   build:
     #working_directory: /app
-    executor: nix
+    executor: nixos
     steps:
       - checkout
       - setup_remote_docker
