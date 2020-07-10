@@ -21,18 +21,24 @@ jobs:
       - run:
           name: Build application Docker image
           command: |
-            nix-build && cp -L result app
+            nix-build && cp -L result image.tar
+      - persist_to_workspace:
+          root: .
+          paths:
+            - ./image.tar
   publish:
     executor: docker-publisher
-      name: Push application Docker image
-      command: |
-        echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
-        IMAGE_TAG=${CIRCLE_TAG/v/''}
-        docker tag gabysbrain-website:latest gabysbrain-website:$IMAGE_TAG
-        docker push gabysbrain-website:latest
-        docker push gabysbrain-website:$IMAGE_TAG
-        #docker tag app "${ECR_ENDPOINT}/app:${CIRCLE_SHA1}"
-        #docker push "${ECR_ENDPOINT}/app:${CIRCLE_SHA1}"
+    steps:
+      - run:
+          name: Push application Docker image
+          command: |
+            echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
+            IMAGE_TAG=${CIRCLE_TAG/v/''}
+            docker tag gabysbrain-website:latest gabysbrain-website:$IMAGE_TAG
+            docker push gabysbrain-website:latest
+            docker push gabysbrain-website:$IMAGE_TAG
+            #docker tag app "${ECR_ENDPOINT}/app:${CIRCLE_SHA1}"
+            #docker push "${ECR_ENDPOINT}/app:${CIRCLE_SHA1}"
 
 workflows:
   version: 2
