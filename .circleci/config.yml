@@ -1,4 +1,4 @@
-version: 2
+version: 2.1
 executors:
   docker-publisher:
     docker:
@@ -8,7 +8,6 @@ executors:
       - image: nixos/nix:latest
 jobs:
   build:
-    #working_directory: /app
     executor: nixos
     steps:
       - checkout
@@ -42,7 +41,6 @@ jobs:
             #docker push "${ECR_ENDPOINT}/app:${CIRCLE_SHA1}"
 
 workflows:
-  version: 2
   build:
     jobs:
       - build
