@@ -15,6 +15,9 @@ jobs:
             - nix-cache
       - checkout
       - run:
+          name: Increase stack size for arguments
+          command: ulimit -s 65536
+      - run:
           name: Install dependencies
           command: |
             nix-channel --update
