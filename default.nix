@@ -1,6 +1,6 @@
 { pkgs ? import <nixpkgs> {}
 }:
-pkgs.dockerTools.buildLayeredImage {
+pkgs.dockerTools.buildImage {
   name = "gabysbrain-website";
   contents = [ 
     pkgs.pandoc 
