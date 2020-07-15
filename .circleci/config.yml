@@ -39,10 +39,14 @@ jobs:
   publish:
     executor: docker-publisher
     steps:
+      - setup_remote_docker
+      - run:
+          name: Login to docker hub
+          command: |
+            echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
       - run:
           name: Push application Docker image
           command: |
-            echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
             IMAGE_TAG="1.0.${CIRCLE_BUILD_NUM}"
             docker tag gabysbrain-website:latest gabysbrain-website:$IMAGE_TAG
             docker push gabysbrain-website:latest
