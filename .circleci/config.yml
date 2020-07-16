@@ -28,6 +28,7 @@ jobs:
           command: |
             ulimit -s 65536 && nix-build && cp -L result image.tar
 
+      # TODO: clean nix directory before saving cache to keep things smaller
       - save_cache:
           key: nix-cache
           paths:
@@ -39,6 +40,8 @@ jobs:
   publish:
     executor: docker-publisher
     steps:
+      - attach_workspace:
+          at: workspace
       - setup_remote_docker
       - run:
           name: Login to docker hub
