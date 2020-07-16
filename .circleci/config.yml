@@ -48,14 +48,16 @@ jobs:
           command: |
             echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
       - run:
-          name: Push application Docker image
+          name: Import docker image
           command: |
             IMAGE_TAG="1.0.${CIRCLE_BUILD_NUM}"
-            docker tag gabysbrain-website:latest gabysbrain-website:$IMAGE_TAG
-            docker push gabysbrain-website:latest
-            docker push gabysbrain-website:$IMAGE_TAG
-            #docker tag app "${ECR_ENDPOINT}/app:${CIRCLE_SHA1}"
-            #docker push "${ECR_ENDPOINT}/app:${CIRCLE_SHA1}"
+            docker import workspace/image.tar gabysbrain/website:$IMAGE_TAG
+      - run:
+          name: Push application docker image
+          command: |
+            docker tag gabysbrain/website:$IMAGE_TAG gabysbrain/website:latest 
+            docker push gabysbrain/website:latest
+            docker push gabysbrain/website:$IMAGE_TAG
 
 workflows:
   build:
