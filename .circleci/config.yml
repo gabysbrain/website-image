@@ -44,18 +44,24 @@ jobs:
           at: workspace
       - setup_remote_docker
       - run:
+          name: Record image tag
+          command: |
+            echo "export IMAGE_TAG=\"1.0.${CIRCLE_BUILD_NUM}\"" >> $BASH_ENV
+      - run:
+          name: Import docker image
+          command: |
+            docker import workspace/image.tar gabysbrain/website:$IMAGE_TAG
+      - run:
+          name: Tag latest image
+          command: |
+            docker tag gabysbrain/website:$IMAGE_TAG gabysbrain/website:latest 
+      - run:
           name: Login to docker hub
           command: |
             echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
       - run:
-          name: Import docker image
-          command: |
-            IMAGE_TAG="1.0.${CIRCLE_BUILD_NUM}"
-            docker import workspace/image.tar gabysbrain/website:$IMAGE_TAG
-      - run:
           name: Push application docker image
           command: |
-            docker tag gabysbrain/website:$IMAGE_TAG gabysbrain/website:latest 
             docker push gabysbrain/website:latest
             docker push gabysbrain/website:$IMAGE_TAG
 
