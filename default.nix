@@ -5,6 +5,7 @@ pkgs.dockerTools.buildImage {
   contents = [ 
     # needed for circleci
     pkgs.bashInteractive
+    pkgs.busybox
     pkgs.git
     pkgs.openssh
     pkgs.gnutar
@@ -14,4 +15,12 @@ pkgs.dockerTools.buildImage {
     pkgs.pandoc 
     pkgs.texlive.combined.scheme-full 
   ];
+  config = {
+    Cmd = [ "/bin/sh" ];
+    Env = [
+      "PATH=/bin"
+      "SSL_CERT_FILE=/etc/ssl/certs/ca-bundle.crt"
+    ];
+    WorkDir = "/";
+  };
 }
