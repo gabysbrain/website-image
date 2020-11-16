@@ -11,7 +11,7 @@ jobs:
     executor: docker-publisher
     steps:
       - checkout
-      - run: docker build -t gabysbrain/website:$IMAGE_TAG .
+      - run: docker build -t gabysbrain/website:$CIRCLE_BRANCH .
   publish:
     executor: docker-publisher
     steps:
