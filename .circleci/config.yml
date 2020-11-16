@@ -8,35 +8,10 @@ executors:
       - image: nixos/nix:latest
 jobs:
   build:
-    executor: nixos
+    executor: docker-publisher
     steps:
-      - restore_cache:
-          keys:
-            - nix-cache
       - checkout
-      - run:
-          name: Increase stack size for arguments
-          command: ulimit -s 65536
-      - run:
-          name: Install dependencies
-          command: |
-            nix-channel --update
-            nix-env -u
-            #nix-env -iA nixos.docker
-      - run:
-          name: Build application Docker image
-          command: |
-            ulimit -s 65536 && nix-build && cp -L result image.tar
-
-      # TODO: clean nix directory before saving cache to keep things smaller
-      - save_cache:
-          key: nix-cache
-          paths:
-            - /nix/store
-      - persist_to_workspace:
-          root: .
-          paths:
-            - ./image.tar
+      - run: docker build -t gabysbrain/website:$IMAGE_TAG .
   publish:
     executor: docker-publisher
     steps:
