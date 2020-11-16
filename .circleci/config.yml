@@ -1,31 +1,16 @@
-version: 2.1
-executors:
-  docker-publisher:
-    docker:
-      - image: circleci/buildpack-deps:stretch
-  nixos:
-    docker:
-      - image: nixos/nix:latest
+version: 2
 jobs:
   build:
-    executor: docker-publisher
+    machine: true
     steps:
       - checkout
-      - run: docker build -t gabysbrain/website:$CIRCLE_BRANCH .
-  publish:
-    executor: docker-publisher
-    steps:
-      - attach_workspace:
-          at: workspace
-      - setup_remote_docker
       - run:
           name: Record image tag
           command: |
             echo "export IMAGE_TAG=\"1.0.${CIRCLE_BUILD_NUM}\"" >> $BASH_ENV
-      - run:
-          name: Import docker image
-          command: |
-            docker import workspace/image.tar gabysbrain/website:$IMAGE_TAG
+      - run: 
+          name: Build docker image
+          command: docker build -t gabysbrain/website:$IMAGE_TAG .
       - run:
           name: Tag latest image
           command: |
@@ -43,10 +28,7 @@ jobs:
 workflows:
   build:
     jobs:
-      - build
-      - publish:
-          requires:
-            - build
+      - build:
           filters:
             branches:
               only: master
