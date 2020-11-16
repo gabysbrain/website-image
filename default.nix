@@ -1,5 +1,13 @@
 { pkgs ? import <nixpkgs> {}
 }:
+
+pkgs.dockerTools.buildImage {
+  name = "gabysbrain-website";
+  config = {
+    Cmd = [ "${pkgs.hello}/bin/hello" ];
+  };
+}
+/*
 pkgs.dockerTools.buildImage {
   name = "gabysbrain-website";
   contents = [ 
@@ -24,3 +32,4 @@ pkgs.dockerTools.buildImage {
     WorkDir = "/";
   };
 }
+*/
