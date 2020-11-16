@@ -25,10 +25,3 @@ jobs:
             docker push gabysbrain/website:latest
             docker push gabysbrain/website:$IMAGE_TAG
 
-workflows:
-  build:
-    jobs:
-      - build:
-          filters:
-            branches:
-              only: master
