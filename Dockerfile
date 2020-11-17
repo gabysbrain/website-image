@@ -6,3 +6,5 @@ RUN nix-channel --update
 RUN nix-build -A texlive.combined.scheme-full '<nixos>'
 RUN nix-build -A pandoc '<nixos>'
 
+RUN nix-install -iA nixos.texlive.combined-scheme-full
+
